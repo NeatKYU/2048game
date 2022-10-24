@@ -17,20 +17,9 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@src/*": [
-        "src/*"
-      ],
-      "@components/*": [
-        "src/components/*"
-      ],
-      "@router/*": [
-        "src/router/*"
-      ],
-      "@pages/*": [
-        "src/pages/*"
-      ],
+      "@/*": ["src/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "routers.tsxx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
