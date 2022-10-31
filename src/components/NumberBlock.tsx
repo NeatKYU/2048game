@@ -16,8 +16,8 @@ export const NumberBlock = (props: NumberBlockProps) => {
 }
 
 const Container = styled.div`
-    width: 100%;
-    height: 100%;
+    width: 2.4rem;
+    height: 2.4rem;
     border-radius: 5px;
     background-color: ${props => props.color};
 
