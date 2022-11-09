@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { NumberBlock } from '@/components/NumberBlock';
 import { useRecoilState } from 'recoil';
 import { boardState } from "@/recoil/board";
-import { getRandom } from "@/utils/math";
+import { getRandom, changeProcession } from "@/utils/math";
 
 interface BoardProps {
     mode: string;
@@ -44,7 +44,7 @@ export const Board = (props: BoardProps) => {
     }
     
     const moveNumber = (moveKey: string) => {
-        const tempBoard = JSON.parse(JSON.stringify(board));
+        let tempBoard = JSON.parse(JSON.stringify(board));
         if (moveKey === 'ArrowLeft') {
             for (let i = 0; i < 4; i++) {
                 // ex) 0 64 32 0 => 64 32 0 0 / 0 2 0 2 => 2 2 0 0
@@ -95,6 +95,60 @@ export const Board = (props: BoardProps) => {
                     }
                 }
             }
+        } else if (moveKey === 'ArrowDown') {
+            const tempChangeBoard = changeProcession(tempBoard);
+            for (let i = 0; i < 4; i++) {
+                // ex) 0 64 32 0 => 0 0 64 32 / 0 2 0 2 => 0 0 2 2
+                const currentBoardRow = JSON.parse(JSON.stringify(tempChangeBoard[i]));
+
+                for (let k = 0; k < 4; k++) {
+                    if (tempChangeBoard[i][k] !== 0) {
+                        currentBoardRow.push(currentBoardRow[k])
+                    }
+                }
+                currentBoardRow.splice(0, 4)
+                while (currentBoardRow.length < 4) {
+                    currentBoardRow.unshift(0)
+                }
+                
+                tempChangeBoard[i] = currentBoardRow;
+
+                for (let j = 2; j >= 0; j--) {
+                    if (tempChangeBoard[i][j] !== 0 && tempChangeBoard[i][j] === tempChangeBoard[i][j + 1]) {
+                        // console.log('same ', i, j, i, j-1)
+                        tempChangeBoard[i][j + 1] = tempChangeBoard[i][j] * 2;
+                        tempChangeBoard[i][j] = 0;
+                    }
+                }
+            }
+            tempBoard = changeProcession(tempChangeBoard);
+        } else if (moveKey === 'ArrowUp') {
+            const tempChangeBoard = changeProcession(tempBoard);
+            for (let i = 0; i < 4; i++) {
+                // ex) 0 64 32 0 => 64 32 0 0 / 0 2 0 2 => 2 2 0 0
+                const currentBoardRow = JSON.parse(JSON.stringify(tempChangeBoard[i]));
+
+                for (let k = 0; k < 4; k++) {
+                    if (tempChangeBoard[i][k] !== 0) {
+                        currentBoardRow.push(currentBoardRow[k])
+                    }
+                }
+                currentBoardRow.splice(0, 4)
+                while (currentBoardRow.length < 4) {
+                    currentBoardRow.push(0)
+                }
+
+                tempChangeBoard[i] = currentBoardRow;
+
+                for (let j = 1; j < 4; j++) {
+                    if (tempChangeBoard[i][j] !== 0 && tempChangeBoard[i][j] === tempChangeBoard[i][j - 1]) {
+                        // console.log('same ', i, j, i, j-1)
+                        tempChangeBoard[i][j - 1] = tempChangeBoard[i][j] * 2;
+                        tempChangeBoard[i][j] = 0;
+                    }
+                }
+            }
+            tempBoard = changeProcession(tempChangeBoard);
         }
 
         // setBoard는 createNumber안에서 실행
@@ -108,9 +162,9 @@ export const Board = (props: BoardProps) => {
         } else if (event.key === 'ArrowRight') {
             moveNumber('ArrowRight')
         } else if (event.key === 'ArrowDown') {
-    
+            moveNumber('ArrowDown')
         } else if (event.key === 'ArrowUp') {
-            
+            moveNumber('ArrowUp')
         }
     }
 

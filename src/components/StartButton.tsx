@@ -17,7 +17,7 @@ export const StartButton = () => {
 
     return (
         <Container onClick={startGame}>
-            new Game
+            {/* new Game */}
         </Container>
     )
 }
