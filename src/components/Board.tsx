@@ -15,31 +15,42 @@ export const Board = (props: BoardProps) => {
 
     const createBlock = (board: number[][], mode: string, row: number) => {
         if (mode === '4x4') {
-            return (
-                <>
-                    {
-                        board[row].map((value: number) => (
-                            <NumberBlock num={value} />
-                        ))
-                    }
-                </>
-            )
+            return board[row].map((value: number) => (
+                <NumberBlock num={value} />
+            ))
         }
     }
 
+    /**
+     * 보드에 숫자가 생성 안된 곳에 랜덤하게 숫자를 생성해주는 함수
+     * 1차 문제 : 2차원의 배열만큼 돌지 않아서 제대로 숫자가 생성되지 않았음
+     * 2차 문제 : 배열의 길이 만큼 돌긴하는데 그동안에 똑같은 수가 
+     * 반복해서 나오면 숫자 생성이 안될 수 있다는 문제점 존재
+     * @param currentBoard 현재 보드 배열값 (2차원 배열)
+     */
     const createNumber = (currentBoard: number[][]) => {
         let tempBoard = currentBoard;
         let check = true;
         let count = 0;
-        while (check && count !== tempBoard.length) {
+        const createList: string[] = [];
+        const boardLength = tempBoard.length * tempBoard[0].length;
+        while (check && count <= boardLength) {
             const x = getRandom(0, 4);
             const y = getRandom(0, 4);
-            if (tempBoard[x][y] === 0) {
-                tempBoard[x][y] = 2;
-                setBoard(tempBoard);
+            const pointStr = x + ',' + y;
+            if (!createList.includes(pointStr)) {
+                createList.push(pointStr)
+                if (tempBoard[x][y] === 0) {
+                    tempBoard[x][y] = 2;
+                    setBoard(tempBoard);
+                    check = false;
+                }
+                count++;
+            }
+            if (count >= boardLength) {
                 check = false;
             }
-            count++;
+            console.log(count)
         }
     }
     
@@ -154,12 +165,16 @@ export const Board = (props: BoardProps) => {
     const keyPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.key === 'ArrowLeft') {
             moveNumber('ArrowLeft');
+            console.log('key down arrow left')
         } else if (event.key === 'ArrowRight') {
             moveNumber('ArrowRight')
+            console.log('key down arrow right')
         } else if (event.key === 'ArrowDown') {
             moveNumber('ArrowDown')
+            console.log('key down arrow down')
         } else if (event.key === 'ArrowUp') {
             moveNumber('ArrowUp')
+            console.log('key down arrow up')
         }
     }
 
