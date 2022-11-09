@@ -33,6 +33,7 @@ export const Board = (props: BoardProps) => {
         let check = true;
         let count = 0;
         const createList: string[] = [];
+        // 1차 문제 해결 포인트
         const boardLength = tempBoard.length * tempBoard[0].length;
         while (check && count <= boardLength) {
             const x = getRandom(0, 4);
@@ -47,10 +48,10 @@ export const Board = (props: BoardProps) => {
                 }
                 count++;
             }
+            // 2차 문제 해결 포인트
             if (count >= boardLength) {
                 check = false;
             }
-            console.log(count)
         }
     }
     
