@@ -30,7 +30,11 @@ export const calculateScore = (board: number[][]) => {
 
     return finalScore;
 }
-
+/**
+ * 보드판의 숫자에 따라서 다른 컬러 코드를 반환하는 함수
+ * @param num 보드판의 현재 숫자
+ * @returns color코드가 정의된 배열에서 해당하는 값 반환
+ */
 export const returnColor = (num: number) => {
     const numArr = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384];
     const colorArr = ['#55795a', '#8db3fa', '#e6f39f', '#c274d1', '#c6e247',
@@ -38,3 +42,7 @@ export const returnColor = (num: number) => {
         '#973a3a', '#12b161', '#388a8b', '#3df88e'];
     return colorArr[numArr.findIndex((element) => element === num)];
 }
+
+// export const changeTheme = (theme: 'light' | 'dark') => {
+
+// }

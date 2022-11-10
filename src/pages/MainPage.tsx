@@ -6,6 +6,7 @@ import { Score } from '@/components/Score';
 import { useRecoilValue } from 'recoil';
 import { boardState } from '@/recoil/board';
 import { calculateScore } from '@/utils/math';
+import { ThemeChangeButton } from '@/components/ThemeChangeButton';
 
 export const MainPage = () => {
 
@@ -18,7 +19,8 @@ export const MainPage = () => {
 
     return (
         <Container>
-            <Score score={calculateScore(board)}/>
+            <Score score={calculateScore(board)} />
+            <ThemeChangeButton label='change theme'/>
             <Board customRef={boardRef} mode='4x4'></Board>
             <div style={{ height: '10px'}}></div>
             <StartButton setFocus={moveFocus} />
