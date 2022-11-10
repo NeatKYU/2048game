@@ -22,7 +22,9 @@ export const ThemeChangeButton = (props: ThemeChangeButtonProps) => {
 
     return (
         <Container onClick={changeTheme}>
-            <Ball toggle={toggle}/>
+            <Ball toggle={toggle}>
+                <Hall toggle={toggle}/>
+            </Ball>
         </Container>
     )
 }
@@ -57,4 +59,12 @@ const Ball = styled.div<{toggle: boolean}>`
     transition: all 0.5s;
 
     border-radius: 50%;
+`;
+
+const Hall = styled.div<{toggle: boolean}>`
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    transform: translate(-10%, -10%);
+    background-color: ${(props) => props.toggle ? props.theme.bgColor : 'transparent'};
 `;
