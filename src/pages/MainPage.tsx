@@ -20,7 +20,7 @@ export const MainPage = () => {
     return (
         <Container>
             <Score score={calculateScore(board)} />
-            <ThemeChangeButton label='change theme'/>
+            <ThemeChangeButton />
             <Board customRef={boardRef} mode='4x4'></Board>
             <div style={{ height: '10px'}}></div>
             <StartButton setFocus={moveFocus} />
