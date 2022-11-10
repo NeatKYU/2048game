@@ -21,6 +21,9 @@ time, mark, audio, video {
   font: inherit;
   vertical-align: baseline;
 	box-sizing: border-box;
+  &:focus {
+    outline: none;
+  }
 }
 .flex-center {
 	display: flex;

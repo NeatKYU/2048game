@@ -3,7 +3,12 @@ import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { getRandom } from '@/utils/math';
 
-export const StartButton = () => {
+interface StartButtonProps {
+    setFocus: () => void
+}
+
+export const StartButton = (props: StartButtonProps) => {
+    const { setFocus } = props;
     const [board, setBoard] = useRecoilState(boardState);
 
     const startGame = () => {
@@ -13,6 +18,7 @@ export const StartButton = () => {
         tempBoard[x][y] = 2;
     
         setBoard(tempBoard);
+        setFocus();
     }
 
     return (

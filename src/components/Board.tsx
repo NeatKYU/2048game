@@ -3,14 +3,16 @@ import { NumberBlock } from '@/components/NumberBlock';
 import { useRecoilState } from 'recoil';
 import { boardState } from "@/recoil/board";
 import { getRandom, upSideDownBoard } from "@/utils/math";
+import { RefObject } from "react";
 
 interface BoardProps {
     mode: string;
+    customRef: RefObject<HTMLDivElement>;
 }
 
 export const Board = (props: BoardProps) => {
 
-    const { mode } = props;
+    const { mode, customRef } = props;
     const [board, setBoard] = useRecoilState(boardState);
 
     const createBlock = (board: number[][], mode: string, row: number) => {
@@ -180,7 +182,7 @@ export const Board = (props: BoardProps) => {
     }
 
     return (
-        <Container tabIndex={0}  onKeyDown={(e) => keyPress(e)}>
+        <Container ref={customRef} tabIndex={0}  onKeyDown={(e) => keyPress(e)}>
             {createBlock(board, mode, 0)}
             {createBlock(board, mode, 1)}
             {createBlock(board, mode, 2)}

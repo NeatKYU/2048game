@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import styled from 'styled-components';
 import { Board } from '@/components/Board';
 import { StartButton } from '@/components/StartButton';
@@ -9,14 +10,19 @@ import { calculateScore } from '@/utils/math';
 export const MainPage = () => {
 
     const board = useRecoilValue(boardState);
+    const boardRef = useRef<HTMLDivElement>(null);
+
+    const moveFocus = () => {
+        boardRef.current?.focus();
+    }
 
     return (
         <Container>
             <Score score={calculateScore(board)}/>
-            <Board mode='4x4'></Board>
+            <Board customRef={boardRef} mode='4x4'></Board>
             <div style={{ height: '10px'}}></div>
-            <StartButton/>
-        </Container>
+            <StartButton setFocus={moveFocus} />
+        </Container> 
     )
 }
 
