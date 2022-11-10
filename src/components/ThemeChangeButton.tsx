@@ -1,6 +1,6 @@
 import { themeState } from '@/recoil/theme';
 import { useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 
 interface ThemeChangeButtonProps {
@@ -34,7 +34,7 @@ const Container = styled.div`
     padding: 0 5px;
 
     display: flex;
-    /* justify-content: center; */
+    /* justify-content: end; */
     align-items: center;
 
     border-radius: 20px;
@@ -42,17 +42,18 @@ const Container = styled.div`
     background-color: ${(props) => props.theme.bgColor};
     color: ${(props) => props.theme.textColor};
     font-size: 1.5rem;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
     cursor: pointer;
 `;
 
 const Ball = styled.div<{toggle: boolean}>`
-    width: 1.7rem;
-    height: 1.7rem;
+    width: 1.5rem;
+    height: 1.5rem;
 
-    background-color: white;
+    background-color: ${(props) => props.theme.textColor};
 
-    transform: ${(props) => props.toggle ? 'translate(100%, 0)' : 'translate(0%, 0)'};
+    transform: ${(props) => props.toggle ? 'translate(120%, 0)' : 'translate(0%, 0)'};
     transition: all 0.5s;
 
     border-radius: 50%;
