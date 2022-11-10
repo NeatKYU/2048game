@@ -10,7 +10,7 @@ export const NumberBlock = (props: NumberBlockProps) => {
     const { num } = props;
 
     return (
-        <Container color='white'>
+        <Container color='#708961'>
             <Num color={returnColor(num)}>
                 {num === 0 ? '' : num}
             </Num>
@@ -19,8 +19,8 @@ export const NumberBlock = (props: NumberBlockProps) => {
 }
 
 const Container = styled.div`
-    width: 2.4rem;
-    height: 2.4rem;
+    width: 3.15rem;
+    height: 3.15rem;
     padding: 3px;
     border-radius: 5px;
     background-color: ${props => props.color};
@@ -33,6 +33,8 @@ const Container = styled.div`
 const Num = styled.div`
     width: 100%;
     height: 100%;
+
+    border-radius: 5px;
 
     display: flex;
     justify-content: center;

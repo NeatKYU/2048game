@@ -181,34 +181,24 @@ export const Board = (props: BoardProps) => {
 
     return (
         <Container tabIndex={0}  onKeyDown={(e) => keyPress(e)}>
-            <Row>
-                {createBlock(board, mode, 0)}
-            </Row>
-            <Row>
-                {createBlock(board, mode, 1)}
-            </Row>
-            <Row>
-                {createBlock(board, mode, 2)}
-            </Row>
-            <Row>
-                {createBlock(board, mode, 3)}
-            </Row>
+            {createBlock(board, mode, 0)}
+            {createBlock(board, mode, 1)}
+            {createBlock(board, mode, 2)}
+            {createBlock(board, mode, 3)}
         </Container>
     )
 }
 
 const Container = styled.div`
-    width: 10rem;
-    height: 10rem;
+    width: 15rem;
+    height: 15rem;
+    padding: 1rem;
 
     border-radius: 5px;
 
-    display: grid;
+    display: inline-flex;
+    flex-wrap: wrap;
     gap: 2px;
-    flex-direction: column;
-`;
-
-const Row = styled.div`
-    display: flex;
-    gap: 2px;
+    background-color: #b1db97;
+    /* flex-direction: column; */
 `;
