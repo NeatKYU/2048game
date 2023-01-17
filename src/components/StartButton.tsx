@@ -4,11 +4,12 @@ import styled from 'styled-components';
 import { getRandom } from '@/utils/math';
 
 interface StartButtonProps {
-    setFocus: () => void
+    setFocus: () => void;
+    title: string;
 }
 
 export const StartButton = (props: StartButtonProps) => {
-    const { setFocus } = props;
+    const { setFocus, title } = props;
     const [board, setBoard] = useRecoilState(boardState);
 
     const startGame = () => {
@@ -23,7 +24,7 @@ export const StartButton = (props: StartButtonProps) => {
 
     return (
         <Container onClick={startGame}>
-            {/* new Game */}
+            {title}
         </Container>
     )
 }
@@ -33,7 +34,7 @@ const Container = styled.div`
     height: 3rem;
     border-radius: 5px;
 
-    background-color: #fff;
+    background-color: ${(props) => props.theme.bgColor};
 
     display: flex;
     justify-content: center;

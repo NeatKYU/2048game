@@ -18,9 +18,6 @@ const Container = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
     color: #fff;
     font-size: 2rem;
 `

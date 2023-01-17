@@ -19,11 +19,13 @@ export const MainPage = () => {
 
     return (
         <Container>
-            <Score score={calculateScore(board)} />
-            <ThemeChangeButton />
+            <InterfaceGroup>
+                <Score score={calculateScore(board)} />
+                <StartButton title={'new Game'} setFocus={moveFocus} />
+                <ThemeChangeButton />
+            </InterfaceGroup>
             <Board customRef={boardRef} mode='4x4'></Board>
             <div style={{ height: '10px'}}></div>
-            <StartButton setFocus={moveFocus} />
         </Container> 
     )
 }
@@ -40,3 +42,13 @@ const Container = styled.div`
 
     position: relative;
 `;
+
+const InterfaceGroup = styled.div`
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+`
