@@ -1,3 +1,11 @@
+import { blockColorArr, scoreArr } from '@/assets/const';
+
+/**
+ * 랜덤수를 만들어주는 함수인데 이 랜덤값은 board의 x,y좌표 입니다.
+ * @param min 
+ * @param max 
+ * @returns 
+ */
 export const getRandom = (min: number, max: number) => Math.floor(Math.random() * (max - min) + min);
 
 /**
@@ -6,7 +14,6 @@ export const getRandom = (min: number, max: number) => Math.floor(Math.random() 
  * @returns 뒤집힌 보드의 2차원 배열값 반환
  */
 export const upSideDownBoard = (board: number[][]) => {
-
     let result = [];
     for (let i = 0; i < board.length; i++) {
         const row = [];
@@ -36,11 +43,7 @@ export const calculateScore = (board: number[][]) => {
  * @returns color코드가 정의된 배열에서 해당하는 값 반환
  */
 export const returnColor = (num: number) => {
-    const numArr = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384];
-    const colorArr = ['#55795a', '#8db3fa', '#e6f39f', '#c274d1', '#c6e247',
-        '#8699ee', '#e07676', '#a1f196', '#db9db0', '#e0875d', '#4a8a7a',
-        '#973a3a', '#12b161', '#388a8b', '#3df88e'];
-    return colorArr[numArr.findIndex((element) => element === num)];
+    return blockColorArr[scoreArr.findIndex((element) => element === num)];
 }
 
 // export const changeTheme = (theme: 'light' | 'dark') => {

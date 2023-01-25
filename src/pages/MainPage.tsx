@@ -1,12 +1,13 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Board } from '@/components/Board';
 import { StartButton } from '@/components/StartButton';
 import { Score } from '@/components/Score';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { boardState } from '@/recoil/board';
 import { calculateScore } from '@/utils/math';
 import { ThemeChangeButton } from '@/components/ThemeChangeButton';
+import { ModeChangeButton } from '@/components/ModeChangeButton';
 
 export const MainPage = () => {
 
@@ -23,8 +24,9 @@ export const MainPage = () => {
                 <Score score={calculateScore(board)} />
                 <StartButton title={'new Game'} setFocus={moveFocus} />
                 <ThemeChangeButton />
+                <ModeChangeButton />
             </InterfaceGroup>
-            <Board customRef={boardRef} mode='4x4'></Board>
+            <Board customRef={boardRef}></Board>
             <div style={{ height: '10px'}}></div>
         </Container> 
     )

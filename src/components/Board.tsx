@@ -1,33 +1,34 @@
 import styled from "styled-components";
 import { NumberBlock } from '@/components/NumberBlock';
-import { useRecoilState } from 'recoil';
-import { boardState } from "@/recoil/board";
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { boardState, modeState } from "@/recoil/board";
 import { getRandom, upSideDownBoard } from "@/utils/math";
 import { RefObject } from "react";
+import { modeArr } from "@/assets/const";
 
 interface BoardProps {
-    mode: string;
     customRef: RefObject<HTMLDivElement>;
 }
 
 export const Board = (props: BoardProps) => {
 
-    const { mode, customRef } = props;
+    const { customRef } = props;
     const [board, setBoard] = useRecoilState(boardState);
+    const mode = useRecoilValue(modeState);
+    const boardSize = mode === modeArr[0] ? 4 : 5;
+    const isDefaultMode = mode === modeArr[0] ? true : false;
 
-    const createBlock = (board: number[][], mode: string, row: number) => {
-        if (mode === '4x4') {
-            return board[row].map((value: number) => (
-                <NumberBlock num={value} />
-            ))
-        }
+    const createBlock = (board: number[][], row: number) => {
+        return board[row].map((value: number, index) => (
+            <NumberBlock num={value} key={value+''+index}/>
+        ))
     }
 
     /**
      * 보드에 숫자가 생성 안된 곳에 랜덤하게 숫자를 생성해주는 함수
-     * 1차 문제 : 2차원의 배열만큼 돌지 않아서 제대로 숫자가 생성되지 않았음
+     * 1차 문제 : 2차원의 배열만큼 돌지 않아서 제대로 숫자가 생성되지 않았음 (해결)
      * 2차 문제 : 배열의 길이 만큼 돌긴하는데 그동안에 똑같은 수가 
-     * 반복해서 나오면 숫자 생성이 안될 수 있다는 문제점 존재
+     * 반복해서 나오면 숫자 생성이 안될 수 있다는 문제점 존재 (해결)
      * @param currentBoard 현재 보드 배열값 (2차원 배열)
      */
     const createNumber = (currentBoard: number[][]) => {
@@ -38,8 +39,8 @@ export const Board = (props: BoardProps) => {
         // 1차 문제 해결 포인트
         const boardLength = tempBoard.length * tempBoard[0].length;
         while (check && count <= boardLength) {
-            const x = getRandom(0, 4);
-            const y = getRandom(0, 4);
+            const x = getRandom(0, boardSize);
+            const y = getRandom(0, boardSize);
             const pointStr = x + ',' + y;
             if (!createList.includes(pointStr)) {
                 createList.push(pointStr)
@@ -60,101 +61,130 @@ export const Board = (props: BoardProps) => {
     const moveNumber = (moveKey: string) => {
         let tempBoard = JSON.parse(JSON.stringify(board));
         if (moveKey === 'ArrowLeft') {
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < boardSize; i++) {
                 // ex) 0 64 32 0 => 64 32 0 0 / 0 2 0 2 => 2 2 0 0
                 const currentBoardRow = JSON.parse(JSON.stringify(tempBoard[i]));
 
-                for (let k = 0; k < 4; k++) {
+                for (let k = 0; k < boardSize; k++) {
                     if (tempBoard[i][k] !== 0) {
                         currentBoardRow.push(currentBoardRow[k])
                     }
                 }
-                currentBoardRow.splice(0, 4)
-                while (currentBoardRow.length < 4) {
+                currentBoardRow.splice(0, boardSize)
+                while (currentBoardRow.length < boardSize) {
                     currentBoardRow.push(0)
                 }
 
                 tempBoard[i] = currentBoardRow;
 
-                for (let j = 1; j < 4; j++) {
+                for (let j = 1; j < boardSize; j++) {
                     if (tempBoard[i][j] !== 0 && tempBoard[i][j] === tempBoard[i][j - 1]) {
                         tempBoard[i][j - 1] = tempBoard[i][j] * 2;
                         tempBoard[i][j] = 0;
                     }
                 }
+                // 같은 숫자가 합쳐지고 나서 순서대로 정렬 되지 않고 그자리 그대로 있는 문제 해결
+                // change 4 0 4 0 -> 4 4 0 0
+                for (let z = 1; z < boardSize-1; z++) {
+                    if (tempBoard[i][z] === 0 && tempBoard[i][z + 1] !== 0) {
+                        tempBoard[i][z] = tempBoard[i][z + 1];
+                        tempBoard[i][z + 1] = 0;
+                    }
+                }
             }
         } else if (moveKey === 'ArrowRight') {
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < boardSize; i++) {
                 // ex) 0 64 32 0 => 0 0 64 32 / 0 2 0 2 => 0 0 2 2
                 const currentBoardRow = JSON.parse(JSON.stringify(tempBoard[i]));
 
-                for (let k = 0; k < 4; k++) {
+                for (let k = 0; k < boardSize; k++) {
                     if (tempBoard[i][k] !== 0) {
                         currentBoardRow.push(currentBoardRow[k])
                     }
                 }
-                currentBoardRow.splice(0, 4)
-                while (currentBoardRow.length < 4) {
+                currentBoardRow.splice(0, boardSize)
+                while (currentBoardRow.length < boardSize) {
                     currentBoardRow.unshift(0)
                 }
                 
                 tempBoard[i] = currentBoardRow;
 
-                for (let j = 2; j >= 0; j--) {
+                for (let j = boardSize - 2; j >= 0; j--) {
                     if (tempBoard[i][j] !== 0 && tempBoard[i][j] === tempBoard[i][j + 1]) {
                         tempBoard[i][j + 1] = tempBoard[i][j] * 2;
                         tempBoard[i][j] = 0;
                     }
                 }
+                // change 0 4 0 4 -> 0 0 4 4
+                for (let z = boardSize - 2; z > 0; z--) {
+                    if (tempBoard[i][z] === 0 && tempBoard[i][z - 1] !== 0) {
+                        tempBoard[i][z] = tempBoard[i][z - 1];
+                        tempBoard[i][z - 1] = 0;
+                    }
+                }
             }
         } else if (moveKey === 'ArrowDown') {
             const tempChangeBoard = upSideDownBoard(tempBoard);
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < boardSize; i++) {
                 // ex) 0 64 32 0 => 0 0 64 32 / 0 2 0 2 => 0 0 2 2
                 const currentBoardRow = JSON.parse(JSON.stringify(tempChangeBoard[i]));
 
-                for (let k = 0; k < 4; k++) {
+                for (let k = 0; k < boardSize; k++) {
                     if (tempChangeBoard[i][k] !== 0) {
                         currentBoardRow.push(currentBoardRow[k])
                     }
                 }
-                currentBoardRow.splice(0, 4)
-                while (currentBoardRow.length < 4) {
+                currentBoardRow.splice(0, boardSize)
+                while (currentBoardRow.length < boardSize) {
                     currentBoardRow.unshift(0)
                 }
                 
                 tempChangeBoard[i] = currentBoardRow;
 
-                for (let j = 2; j >= 0; j--) {
+                for (let j = boardSize - 2; j >= 0; j--) {
                     if (tempChangeBoard[i][j] !== 0 && tempChangeBoard[i][j] === tempChangeBoard[i][j + 1]) {
                         tempChangeBoard[i][j + 1] = tempChangeBoard[i][j] * 2;
                         tempChangeBoard[i][j] = 0;
+                    }
+                }
+                // change 0 4 0 4 -> 0 0 4 4
+                for (let z = boardSize - 2; z > 0; z--) {
+                    if (tempChangeBoard[i][z] === 0 && tempChangeBoard[i][z - 1] !== 0) {
+                        tempChangeBoard[i][z] = tempChangeBoard[i][z - 1];
+                        tempChangeBoard[i][z - 1] = 0;
                     }
                 }
             }
             tempBoard = upSideDownBoard(tempChangeBoard);
         } else if (moveKey === 'ArrowUp') {
             const tempChangeBoard = upSideDownBoard(tempBoard);
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < boardSize; i++) {
                 // ex) 0 64 32 0 => 64 32 0 0 / 0 2 0 2 => 2 2 0 0
                 const currentBoardRow = JSON.parse(JSON.stringify(tempChangeBoard[i]));
 
-                for (let k = 0; k < 4; k++) {
+                for (let k = 0; k < boardSize; k++) {
                     if (tempChangeBoard[i][k] !== 0) {
                         currentBoardRow.push(currentBoardRow[k])
                     }
                 }
-                currentBoardRow.splice(0, 4)
-                while (currentBoardRow.length < 4) {
+                currentBoardRow.splice(0, boardSize)
+                while (currentBoardRow.length < boardSize) {
                     currentBoardRow.push(0)
                 }
 
                 tempChangeBoard[i] = currentBoardRow;
 
-                for (let j = 1; j < 4; j++) {
+                for (let j = 1; j < boardSize; j++) {
                     if (tempChangeBoard[i][j] !== 0 && tempChangeBoard[i][j] === tempChangeBoard[i][j - 1]) {
                         tempChangeBoard[i][j - 1] = tempChangeBoard[i][j] * 2;
                         tempChangeBoard[i][j] = 0;
+                    }
+                }
+                // change 4 0 4 0 -> 4 4 0 0
+                for (let z = 1; z < boardSize-1; z++) {
+                    if (tempChangeBoard[i][z] === 0 && tempChangeBoard[i][z + 1] !== 0) {
+                        tempChangeBoard[i][z] = tempChangeBoard[i][z + 1];
+                        tempChangeBoard[i][z + 1] = 0;
                     }
                 }
             }
@@ -182,18 +212,22 @@ export const Board = (props: BoardProps) => {
     }
 
     return (
-        <Container ref={customRef} tabIndex={0}  onKeyDown={(e) => keyPress(e)}>
-            {createBlock(board, mode, 0)}
-            {createBlock(board, mode, 1)}
-            {createBlock(board, mode, 2)}
-            {createBlock(board, mode, 3)}
+        <Container
+            ref={customRef}
+            tabIndex={0}
+            isDefaultMode={isDefaultMode}
+            onKeyDown={(e) => keyPress(e)}
+        >
+            {board.map((_, index) => {
+                return createBlock(board, index)
+            })}
         </Container>
     )
 }
 
-const Container = styled.div`
-    width: 15rem;
-    height: 15rem;
+const Container = styled.div<{isDefaultMode: boolean}>`
+    width: ${({ isDefaultMode }) => isDefaultMode ? '15rem' : '18.3rem'};
+    height: ${({ isDefaultMode }) => isDefaultMode ? '15rem' : '18.3rem'};
     padding: 1rem;
 
     border-radius: 5px;
